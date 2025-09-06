@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -43,36 +43,65 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <h1>📝 Task Manager</h1>
+  <div className="container">
+    <h1>📝 Task Manager</h1>
 
-      <div style={{ display: 'flex', marginBottom: 20 }}>
-        <input
-          type="text"
-          value={newTitle}
-          onChange={e => setNewTitle(e.target.value)}
-          placeholder="Neue Aufgabe"
-          style={{ flex: 1, padding: 10, marginRight: 10, borderRadius: 5, border: "1px solid #ccc" }}
-        />
-        <button className="add" onClick={addTask}>Hinzufügen</button>
-      </div>
-
-      <ul className="task-list" style={{ listStyle: 'none', padding: 0 }}>
-        {tasks.map(task => (
-          <li key={task.id}>
-            <span
-              onClick={() => toggleTask(task)}
-              className={task.completed ? "task-completed" : ""}
-              style={{ flex: 1, cursor: 'pointer' }}
-            >
-              {task.title}
-            </span>
-            <button className="delete" onClick={() => deleteTask(task.id)}>Löschen</button>
-          </li>
-        ))}
-      </ul>
+    <div style={{ display: 'flex', marginBottom: 20 }}>
+      <input
+        type="text"
+        value={newTitle}
+        onChange={e => setNewTitle(e.target.value)}
+        placeholder="Neue Aufgabe"
+        style={{ flex: 1, padding: 10, marginRight: 10, borderRadius: 5, border: "1px solid #ccc" }}
+      />
+      <button className="add" onClick={addTask}>Hinzufügen</button>
     </div>
-  );
+
+    <DragDropContext
+      onDragEnd={(result) => {
+        if (!result.destination) return; // Abbruch, wenn nicht auf ein Ziel gezogen
+        const items = Array.from(tasks);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        setTasks(items);
+      }}
+    >
+      <Droppable droppableId="tasks">
+        {(provided) => (
+          <ul
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            className="task-list"
+            style={{ listStyle: 'none', padding: 0 }}
+          >
+            {tasks.map((task, index) => (
+              <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
+                {(provided) => (
+                  <li
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    style={{ display: 'flex', marginBottom: 10, ...provided.draggableProps.style }}
+                  >
+                    <span
+                      onClick={() => toggleTask(task)}
+                      className={task.completed ? "task-completed" : ""}
+                      style={{ flex: 1, cursor: 'pointer' }}
+                    >
+                      {task.title}
+                    </span>
+                    <button className="delete" onClick={() => deleteTask(task.id)}>Löschen</button>
+                  </li>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
+    </DragDropContext>
+  </div>
+);
 }
 
 export default App;
