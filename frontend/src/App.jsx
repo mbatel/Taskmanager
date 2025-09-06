@@ -8,18 +8,20 @@ function App() {
 
 
   useEffect(() => {
-    fetch(`${API_URL}/tasks/`)
+    fetch(API_URL)  // <-- hier nur API_URL, nicht API_URL + /tasks/
       .then(res => res.json())
       .then(data => setTasks(data));
-  }, []);
+}, []);
+
 
   const addTask = async () => {
     if (!newTitle) return;
-    const res = await fetch(`${API_URL}/tasks/`, {
+    const res = await fetch(API_URL, {  // <-- nur API_URL
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: newTitle })
-    });
+});
+
     const task = await res.json();
     setTasks([...tasks, task]);
     setNewTitle("");
