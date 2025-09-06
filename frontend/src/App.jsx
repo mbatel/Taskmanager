@@ -4,7 +4,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [newTitle, setNewTitle] = useState("");
 
-  const API_URL = "http://127.0.0.1:8000";
+  const API_URL = "https://taskmanager-168m.onrender.com";
 
   useEffect(() => {
     fetch(`${API_URL}/tasks/`)
