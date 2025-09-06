@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react"; // <-- useState und useEffect importieren
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function App() {
