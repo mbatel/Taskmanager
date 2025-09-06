@@ -13,10 +13,7 @@ app = FastAPI(title="Task Manager API")
 # ----------------------------
 # CORS: erlaubt Zugriff vom Frontend
 # ----------------------------
-origins = [
-    "https://taskmanager-frontend.onrender.com",  # URL deiner gehosteten React-App
-    "http://localhost:5173"                        # für lokales Testen
-]
+origins = ["https://taskmanager-168m-frontend.onrender.com"]
 
 app.add_middleware(
     CORSMiddleware,
