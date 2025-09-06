@@ -13,7 +13,7 @@ app = FastAPI(title="Task Manager API")
 # ----------------------------
 # CORS: erlaubt Zugriff vom Frontend
 # ----------------------------
-origins = ["https://taskmanager-168m-frontend.onrender.com"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
