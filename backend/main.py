@@ -3,25 +3,28 @@ from pydantic import BaseModel
 from typing import List
 from pathlib import Path
 import json
-
-app = FastAPI(title="Task Manager API")
-
 from fastapi.middleware.cors import CORSMiddleware
 
+# ----------------------------
+# FastAPI App
+# ----------------------------
+app = FastAPI(title="Task Manager API")
+
+# ----------------------------
+# CORS: erlaubt Zugriff vom Frontend
+# ----------------------------
 origins = [
-    "http://localhost:5173",  # React-Devserver
-    "http://127.0.0.1:5173"
+    "https://taskmanager-frontend.onrender.com",  # URL deiner gehosteten React-App
+    "http://localhost:5173"                        # für lokales Testen
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,      # erlaubt diese Domains
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],        # erlaubt GET, POST, PUT, DELETE etc.
-    allow_headers=["*"]         # erlaubt alle Header
+    allow_methods=["*"],
+    allow_headers=["*"]
 )
-
-
 
 # ----------------------------
 # Datenmodelle
@@ -36,7 +39,7 @@ class TaskCreate(BaseModel):
     completed: bool = False
 
 # ----------------------------
-# Speicher (JSON-Datei)
+# Speicher (JSON-Datei) – Achtung: auf Render nicht persistent
 # ----------------------------
 TASK_FILE = Path("tasks.json")
 tasks: List[Task] = []
